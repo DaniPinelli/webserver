@@ -1,17 +1,29 @@
-const http = require('http');
+const express = require('express')
+const app = express()
+const port = 8080;
 
-http.createServer((req, res) => {
 
-    res.setHeader('Content-Disposition', 'attachment; filename="test.csv"');
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.write("id, nombre\n");
-    res.write("1, Juan\n");
-    res.write("2, Pedro\n");
-    res.write("3, Lucas\n");
-    res.write("4, Marcos\n");
-    res.write("5, Mateo\n");
-    res.end();
-})
-    .listen(8080);
+app.set('view engine', 'hbs');
 
-console.log('Server running at http://localhost:8080/');
+//Middleware to serve static files
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+});
+
+app.get('/generic', (req, res) => {
+    res.sendFile(__dirname + '/public/generic.html')
+});
+
+app.get('/elements', (req, res) => {
+    res.sendFile(__dirname + '/public/elements.html')
+});
+
+app.get('*', (req, res) => {
+    res.sendFile(__dirname + '/public/404.html')
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`)
+});
